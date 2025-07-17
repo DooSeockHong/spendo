@@ -37,7 +37,7 @@ out/
 .vscode/
 
 # queryDSL 제외
-/src/main/generated/
+/src/main/generated/**/
 
 # properties 파일 무시
 *.properties
