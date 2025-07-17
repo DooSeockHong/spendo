@@ -22,3 +22,5 @@ rad.json
 TestResults.xml
 #querydsl 제외
 /src/main/generated/
+# 모든 .properties 파일 무시
+*.properties
