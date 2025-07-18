@@ -1,6 +1,6 @@
 package com.hong.spendo.queryRepository;
 
-import org.springframework.stereotype.Repository;
+
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import static com.hong.spendo.entity.QSpendo.spendo;
 
 import java.time.LocalDate;
+
+import org.springframework.stereotype.Repository;
 
 /*
  * queryDsl 쿼리
