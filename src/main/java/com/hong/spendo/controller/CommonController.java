@@ -34,4 +34,11 @@ public class CommonController {
 		return commonService.commonExInCodeGet();
 	}
 	
+	//체크카드,신용카드 불러오기 
+	@GetMapping("/commonCcCrCodeGet")
+	public ResponseEntity commonCcCrCodeGet() throws Exception {
+		return commonService.commonCcCrCodeGet();
+	}
+	
+	
 }

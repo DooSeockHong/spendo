@@ -37,7 +37,6 @@ public class CommonService {
 	//공통코드 지출,수입 불러오기
 	public ResponseEntity commonExInCodeGet() throws Exception {
 		
-		
 		List<CommonType> list = commonTypeRepository.findByCommonCodeOrCommonCodeAndDelAt("EX01", "IN01", "N");
 		
 		if(list.isEmpty()) {
@@ -46,6 +45,19 @@ public class CommonService {
 		
 		return ResponseEntity.of(ResponseStatus.SUCCESS,"성공",list);
 	}
+	
+	//공통코드 체크카드,신용카드 불러오기
+	public ResponseEntity commonCcCrCodeGet() throws Exception {
+				
+		List<CommonType> list = commonTypeRepository.findByCommonCodeOrCommonCodeAndDelAt("CC01", "CR01", "N");
+			
+		if(list.isEmpty()) {
+				ResponseEntity.of(ResponseStatus.FAIL,"실패");
+		}	
+		
+		return ResponseEntity.of(ResponseStatus.SUCCESS,"성공",list);
+	}
+	
 	
 	
 }

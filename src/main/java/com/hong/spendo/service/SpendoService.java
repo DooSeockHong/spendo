@@ -44,6 +44,8 @@ public class SpendoService {
 		spendo.setSpendoTitle(spendoDTO.getSpendoTitle());
 		spendo.setSpendoContent(spendoDTO.getSpendoContent());
 		spendo.setSpendoPrice(spendoDTO.getSpendoPrice());
+		spendo.setSpendoType(spendoDTO.getSpendoType());
+		spendo.setSpendoCodeType(spendoDTO.getSpendoCodeType());
 		Spendo spendoIns = spendoRepository.save(spendo);
 		//등록 데이터 없을시 실패 
 		if(spendoIns == null) {
