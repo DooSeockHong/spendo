@@ -127,41 +127,78 @@ public class SpendoService {
 		spendoEdit.setUpdDt(LocalDate.now());
 		spendoEdit.setUserNo(spendo.getUserNo());
 		//제목수정
-		if(spendoEditDTO.getSpendoTitle() != null && spendoEditDTO.getSpendoContent() == null && spendoEditDTO.getSpendoPrice() == 0) {
+		if(spendoEditDTO.getSpendoTitle() != null && spendoEditDTO.getSpendoContent() == null && spendoEditDTO.getSpendoPrice() == 0 && spendoEditDTO.getSpendoType() == null && spendoEditDTO.getSpendoCodeType() == null) {
 			spendoEdit.setSpendoTitle(spendoEditDTO.getSpendoTitle());
 			spendoEdit.setSpendoContent(spendo.getSpendoContent());
 			spendoEdit.setSpendoPrice(spendo.getSpendoPrice());
-		} else if(spendoEditDTO.getSpendoTitle() == null && spendoEditDTO.getSpendoContent() != null && spendoEditDTO.getSpendoPrice() == 0) {
+			spendoEdit.setSpendoType(spendo.getSpendoType());
+			spendoEdit.setSpendoCodeType(spendo.getSpendoCodeType());
+		} else if(spendoEditDTO.getSpendoTitle() == null && spendoEditDTO.getSpendoContent() != null && spendoEditDTO.getSpendoPrice() == 0 && spendoEditDTO.getSpendoType() == null && spendoEditDTO.getSpendoCodeType() == null) {
 			//내용 수정
 			spendoEdit.setSpendoContent(spendoEditDTO.getSpendoContent());
 			spendoEdit.setSpendoTitle(spendo.getSpendoTitle());
 			spendoEdit.setSpendoPrice(spendo.getSpendoPrice());
-		} else if (spendoEditDTO.getSpendoTitle() == null && spendoEditDTO.getSpendoContent() == null && spendoEditDTO.getSpendoPrice() > 0) {
+			spendoEdit.setSpendoType(spendo.getSpendoType());
+			spendoEdit.setSpendoCodeType(spendo.getSpendoCodeType());
+		} else if (spendoEditDTO.getSpendoTitle() == null && spendoEditDTO.getSpendoContent() == null && spendoEditDTO.getSpendoPrice() > 0 && spendoEditDTO.getSpendoType() == null && spendoEditDTO.getSpendoCodeType() == null) {
 			//가격 수정
 			spendoEdit.setSpendoPrice(spendoEditDTO.getSpendoPrice());
 			spendoEdit.setSpendoTitle(spendo.getSpendoTitle());
 			spendoEdit.setSpendoContent(spendo.getSpendoContent());
-		} else if (spendoEditDTO.getSpendoTitle() != null && spendoEditDTO.getSpendoContent() != null && spendoEditDTO.getSpendoPrice() == 0) {
+			spendoEdit.setSpendoType(spendo.getSpendoType());
+			spendoEdit.setSpendoCodeType(spendo.getSpendoCodeType());
+		} else if (spendoEditDTO.getSpendoTitle() != null && spendoEditDTO.getSpendoContent() != null && spendoEditDTO.getSpendoPrice() == 0 && spendoEditDTO.getSpendoType() == null && spendoEditDTO.getSpendoCodeType() == null) {
 			//제목,내용 수정
 			spendoEdit.setSpendoTitle(spendoEditDTO.getSpendoTitle());
 			spendoEdit.setSpendoContent(spendoEditDTO.getSpendoContent());
 			spendoEdit.setSpendoPrice(spendo.getSpendoPrice());
-		} else if (spendoEditDTO.getSpendoTitle() != null && spendoEditDTO.getSpendoContent() == null && spendoEditDTO.getSpendoPrice() > 0) {
+			spendoEdit.setSpendoType(spendo.getSpendoType());
+			spendoEdit.setSpendoCodeType(spendo.getSpendoCodeType());
+		} else if (spendoEditDTO.getSpendoTitle() != null && spendoEditDTO.getSpendoContent() == null && spendoEditDTO.getSpendoPrice() > 0 && spendoEditDTO.getSpendoType() == null && spendoEditDTO.getSpendoCodeType() == null) {
 			//제목,가격 수정 
 			spendoEdit.setSpendoTitle(spendoEditDTO.getSpendoTitle());
 			spendoEdit.setSpendoContent(spendo.getSpendoContent());
 			spendoEdit.setSpendoPrice(spendo.getSpendoPrice());
-		} else if (spendoEditDTO.getSpendoTitle() != null && spendoEditDTO.getSpendoContent() == null && spendoEditDTO.getSpendoPrice() > 0) {
+			spendoEdit.setSpendoType(spendo.getSpendoType());
+			spendoEdit.setSpendoCodeType(spendo.getSpendoCodeType());
+		} else if (spendoEditDTO.getSpendoTitle() != null && spendoEditDTO.getSpendoContent() == null && spendoEditDTO.getSpendoPrice() > 0 && spendoEditDTO.getSpendoType() == null && spendoEditDTO.getSpendoCodeType() == null) {
 			//내용,가격 수정
 			spendoEdit.setSpendoTitle(spendo.getSpendoTitle());
 			spendoEdit.setSpendoContent(spendoEditDTO.getSpendoContent());
 			spendoEdit.setSpendoPrice(spendo.getSpendoPrice());
-		} else if (spendoEditDTO.getSpendoTitle() != null && spendoEditDTO.getSpendoContent() != null && spendoEditDTO.getSpendoPrice() > 0) {
+			spendoEdit.setSpendoType(spendo.getSpendoType());
+			spendoEdit.setSpendoCodeType(spendo.getSpendoCodeType());
+		} else if (spendoEditDTO.getSpendoTitle() != null && spendoEditDTO.getSpendoContent() != null && spendoEditDTO.getSpendoPrice() > 0 && spendoEditDTO.getSpendoType() == null && spendoEditDTO.getSpendoCodeType() == null) {
 			//제목,내용,가격 수정
 			spendoEdit.setSpendoTitle(spendoEditDTO.getSpendoTitle());
 			spendoEdit.setSpendoContent(spendoEditDTO.getSpendoContent());
 			spendoEdit.setSpendoPrice(spendoEditDTO.getSpendoPrice());
+			spendoEdit.setSpendoType(spendo.getSpendoType());
+			spendoEdit.setSpendoCodeType(spendo.getSpendoCodeType());
+		} else if (spendoEditDTO.getSpendoTitle() == null && spendoEditDTO.getSpendoContent() == null && spendoEditDTO.getSpendoPrice() == 0 && spendoEditDTO.getSpendoType() != null && spendoEditDTO.getSpendoCodeType() == null) {
+			//지출 타입 수정
+			spendoEdit.setSpendoTitle(spendo.getSpendoTitle());
+			spendoEdit.setSpendoContent(spendo.getSpendoContent());
+			spendoEdit.setSpendoPrice(spendo.getSpendoPrice());
+			spendoEdit.setSpendoType(spendoEditDTO.getSpendoType());
+			spendoEdit.setSpendoCodeType(spendo.getSpendoCodeType());
+		} else if (spendoEditDTO.getSpendoTitle() == null && spendoEditDTO.getSpendoContent() == null && spendoEditDTO.getSpendoPrice() == 0 && spendoEditDTO.getSpendoType() == null && spendoEditDTO.getSpendoCodeType() != null) {
+			//카드 타입 수정
+			spendoEdit.setSpendoTitle(spendo.getSpendoTitle());
+			spendoEdit.setSpendoContent(spendo.getSpendoContent());
+			spendoEdit.setSpendoPrice(spendo.getSpendoPrice());
+			spendoEdit.setSpendoType(spendo.getSpendoType());
+			spendoEdit.setSpendoCodeType(spendoEditDTO.getSpendoCodeType());
+		} else if (spendoEditDTO.getSpendoTitle() != null && spendoEditDTO.getSpendoContent() != null && spendoEditDTO.getSpendoPrice() > 0 && spendoEditDTO.getSpendoType() != null && spendoEditDTO.getSpendoCodeType() != null) {
+			//전체 수정
+			spendoEdit.setSpendoTitle(spendoEditDTO.getSpendoTitle());
+			spendoEdit.setSpendoContent(spendoEditDTO.getSpendoContent());
+			spendoEdit.setSpendoPrice(spendoEditDTO.getSpendoPrice());
+			spendoEdit.setSpendoType(spendoEditDTO.getSpendoType());
+			spendoEdit.setSpendoCodeType(spendoEditDTO.getSpendoCodeType());
 		}
+		
+		
 		Spendo spendoEditEntity = spendoRepository.save(spendoEdit);
 		ModelMapper modelMapper = new ModelMapper();
 		//엔디티 값을 DTO로 복사
