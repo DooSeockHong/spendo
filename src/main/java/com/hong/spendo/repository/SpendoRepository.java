@@ -18,6 +18,9 @@ public interface SpendoRepository extends JpaRepository<Spendo, Long> {
 	public List<SpendoResponseListDTO> findBySpendoTitleContainingAndDelAt(String spendoTitle,String delAt);
 	public List<SpendoResponseListDTO> findByCretDtBetweenAndDelAt(LocalDate startDate, LocalDate endDate,String delAt);
 	public List<SpendoResponseListDTO> findBySpendoTitleContainingAndDelAtAndCretDtBetween(String spendoTitle,String delAt,LocalDate startDate, LocalDate endDate);
+	public List<SpendoResponseListDTO> findBySpendoTitleContainingAndDelAtAndSpendoTypeContainingAndCretDtBetween(String spendoTitle,String delAt,String spendoType,LocalDate startDate, LocalDate endDate);
+	public List<SpendoResponseListDTO> findBySpendoTitleContainingAndDelAtAndSpendoCodeTypeContainingAndCretDtBetween(String spendoTitle,String delAt,String spendoCodeType,LocalDate startDate, LocalDate endDate);
+	public List<SpendoResponseListDTO> findBySpendoTitleContainingAndDelAtAndSpendoTypeContainingAndSpendoCodeTypeContainingAndCretDtBetween(String spendoTitle,String delAt,String spendoType,String spendoCodeType,LocalDate startDate, LocalDate endDate);
 	public Spendo getBySpendoNoAndDelAt(Long spendoNo,String delAt);
 	
 }

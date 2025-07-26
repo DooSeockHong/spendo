@@ -76,16 +76,25 @@ public class SpendoService {
 		// 조건이없는경우 다보여주기
 		if(isAllFieldsEmpty) {
 			spendoList = spendoRepository.findByDelAt("N");
-		} else if(spendoListDTO.getSpendoTitle() != null && spendoListDTO.getCretDt() == null && spendoListDTO.getEndDt() == null) {
+		} else if(spendoListDTO.getSpendoTitle() != null && spendoListDTO.getCretDt() == null && spendoListDTO.getEndDt() == null && spendoListDTO.getSpendoType() == null && spendoListDTO.getSpendoCodeType() == null) {
 			//제목만있는조건
 			spendoList = spendoRepository.findBySpendoTitleContainingAndDelAt(spendoListDTO.getSpendoTitle(),"N");
-		} else if (spendoListDTO.getSpendoTitle() == null && spendoListDTO.getCretDt() != null && spendoListDTO.getEndDt() != null) {
+		} else if (spendoListDTO.getSpendoTitle() == null && spendoListDTO.getCretDt() != null && spendoListDTO.getEndDt() != null && spendoListDTO.getSpendoType() == null && spendoListDTO.getSpendoCodeType() == null) {
 			//날짜 검색
 			spendoList = spendoRepository.findByCretDtBetweenAndDelAt(startDate,endDate,"N");
-		} else if (spendoListDTO.getSpendoTitle() != null && spendoListDTO.getCretDt() != null && spendoListDTO.getEndDt() != null) {
+		} else if (spendoListDTO.getSpendoTitle() != null && spendoListDTO.getCretDt() != null && spendoListDTO.getEndDt() != null && spendoListDTO.getSpendoType() == null && spendoListDTO.getSpendoCodeType() == null) {
 			//제목,날짜 조건
 			spendoList = spendoRepository.findBySpendoTitleContainingAndDelAtAndCretDtBetween(spendoListDTO.getSpendoTitle(),"N",startDate,endDate);
-		} 
+		} else if (spendoListDTO.getSpendoTitle() != null && spendoListDTO.getCretDt() != null && spendoListDTO.getEndDt() != null && spendoListDTO.getSpendoType() != null && spendoListDTO.getSpendoCodeType() == null) {
+			//제목,날짜,지출타입 조건
+			spendoList = spendoRepository.findBySpendoTitleContainingAndDelAtAndSpendoTypeContainingAndCretDtBetween(spendoListDTO.getSpendoTitle(),"N",spendoListDTO.getSpendoType(), startDate, endDate);
+		} else if (spendoListDTO.getSpendoTitle() != null && spendoListDTO.getCretDt() != null && spendoListDTO.getEndDt() != null && spendoListDTO.getSpendoType() == null && spendoListDTO.getSpendoCodeType() != null) {
+			//제목,날짜,카드구분 조건
+			spendoList = spendoRepository.findBySpendoTitleContainingAndDelAtAndSpendoCodeTypeContainingAndCretDtBetween(spendoListDTO.getSpendoTitle(),"N", spendoListDTO.getSpendoCodeType(), startDate, endDate);
+		} else if(spendoListDTO.getSpendoTitle() != null && spendoListDTO.getCretDt() != null && spendoListDTO.getEndDt() != null && spendoListDTO.getSpendoType() != null && spendoListDTO.getSpendoCodeType() != null) {
+			//제목,날짜,지출타입,카드구분 
+			spendoList = spendoRepository.findBySpendoTitleContainingAndDelAtAndSpendoTypeContainingAndSpendoCodeTypeContainingAndCretDtBetween(spendoListDTO.getSpendoTitle(),"N",spendoListDTO.getSpendoType(),spendoListDTO.getSpendoCodeType(), startDate, endDate);
+		}
 		
 		return ResponseEntity.of(ResponseStatus.SUCCESS,"성공",spendoList);
 	}
