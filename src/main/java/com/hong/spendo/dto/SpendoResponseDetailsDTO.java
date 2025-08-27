@@ -18,6 +18,6 @@ public class SpendoResponseDetailsDTO {
 	// 가격
 	private int spendoPrice; 
 	// 날짜 
-	private String cretDt;
+	private String spendoDate;
 	
 }

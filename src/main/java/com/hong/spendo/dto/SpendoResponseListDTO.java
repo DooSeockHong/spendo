@@ -15,7 +15,7 @@ public class SpendoResponseListDTO {
 	private String spendoCodeType;
 	// 가격
 	private int spendoPrice; 
-	// 날짜 시작
-	private String cretDt;
+	// 날짜
+	private String spendoDate;
 	
 }

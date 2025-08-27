@@ -18,5 +18,7 @@ public class SpendoEditDTO {
 	private String spendoType;
 	// 카드 구분 
 	private String spendoCodeType;
+	// 날짜
+	private String spendoDate;
 
 }

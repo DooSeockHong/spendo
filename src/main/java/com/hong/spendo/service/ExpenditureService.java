@@ -37,7 +37,7 @@ public class ExpenditureService {
 		LocalDate startDate = null;
 		LocalDate endDate = null;
 		DateTimeFormatter formatter;
-		ExpenditureResponseDTO expenditureResponseDTO = new ExpenditureResponseDTO();
+		
 		
 		if(commonDTO == null) {
 			return ResponseEntity.of(ResponseStatus.FAIL,"실패");
@@ -49,32 +49,59 @@ public class ExpenditureService {
 		startDate = LocalDate.parse(commonDTO.getStartDt(),formatter);
 		endDate = LocalDate.parse(commonDTO.getEndDt(),formatter);
 		
-		int expenditureSumPrice = spendoQueryRepository.findByCretDtBetween(startDate, endDate);
+		List<ExpenditureResponseDTO> list = spendoQueryRepository.findBySpendoDateBetweenExpenditure(startDate, endDate, "EX01");
+		
+		for (int i=0; i < list.size(); i++) {
+			list.get(i).setStartDt(commonDTO.getStartDt());
+			list.get(i).setEndDt(commonDTO.getEndDt());
+		}
+		return ResponseEntity.of(ResponseStatus.SUCCESS,"성공",list);
+	}
+	
+	
+	/**
+	* 기간별 지출 가격 통계 
+	*/
+	public ResponseEntity expenditurePriceGet(String spendoDate) throws Exception {
+		LocalDate startDate = null;
+		LocalDate endDate = null;
+		DateTimeFormatter formatter;
+		ExpenditureResponseDTO expenditureResponseDTO = new ExpenditureResponseDTO();
+		
+		if(spendoDate == null) {
+			return ResponseEntity.of(ResponseStatus.FAIL,"실패");
+		}
+		
+		
+		formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		//문자를 날짜로변환
+		startDate = LocalDate.parse(spendoDate,formatter);
+		endDate = LocalDate.parse(spendoDate,formatter);
+		
+		int expenditurePrice = spendoQueryRepository.findBySpendoDateAndExpenditurePrice(startDate,"EX01");
 		expenditureResponseDTO.setStartDt(startDate.toString());
 		expenditureResponseDTO.setEndDt(endDate.toString());
-		expenditureResponseDTO.setExpenditurePrice(expenditureSumPrice);
+		expenditureResponseDTO.setExpenditurePrice(expenditurePrice);
+		
 		return ResponseEntity.of(ResponseStatus.SUCCESS,"성공",expenditureResponseDTO);
 	}
+	
 	
 	/*
 	 * 월별 지출 통계
 	 */
 	public ResponseEntity monthExpenditureGet(String startDt) throws Exception {
 		
-		ExpenditureMonthResponseDTO expenditureMonthResponseDTO = new ExpenditureMonthResponseDTO();
-		
 		if(startDt == null || startDt.equals("")) {
 			return ResponseEntity.of(ResponseStatus.FAIL,"실패");
 		}
 		
-		int expenditureMonthSumPrice = spendoQueryRepository.findByDateLike(startDt);
+		LocalDate date = LocalDate.parse(startDt, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+		String monthAndYear = date.format(DateTimeFormatter.ofPattern("yyyy-MM"));
 		
-		if (expenditureMonthSumPrice == 0) {
-			return ResponseEntity.of(ResponseStatus.FAIL,"실패");
-		}
-		expenditureMonthResponseDTO.setStartDt(startDt);
-		expenditureMonthResponseDTO.setExpenditureMonthSumPrice(expenditureMonthSumPrice);
-		return ResponseEntity.of(ResponseStatus.SUCCESS,"성공",expenditureMonthResponseDTO);
+		List<ExpenditureMonthResponseDTO> list = spendoQueryRepository.findByDateLike(monthAndYear);
+		System.out.println("list " + list);
+		return ResponseEntity.of(ResponseStatus.SUCCESS,"성공",list);
 	}
 	
 	

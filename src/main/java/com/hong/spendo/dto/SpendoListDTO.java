@@ -12,9 +12,11 @@ public class SpendoListDTO {
 	// 카드 구분 
 	private String spendoCodeType;
 	// 날짜 시작
-	private String cretDt;
+	private String startDt;
 	// 날짜 끝
 	private String endDt;
+	//날짜
+	private String spendoDate;
 	
 	
 	

@@ -14,13 +14,15 @@ import com.hong.spendo.entity.Spendo;
 
 public interface SpendoRepository extends JpaRepository<Spendo, Long> {
 	
-	public List<SpendoResponseListDTO> findByDelAt(String delAt);
-	public List<SpendoResponseListDTO> findBySpendoTitleContainingAndDelAt(String spendoTitle,String delAt);
-	public List<SpendoResponseListDTO> findByCretDtBetweenAndDelAt(LocalDate startDate, LocalDate endDate,String delAt);
-	public List<SpendoResponseListDTO> findBySpendoTitleContainingAndDelAtAndCretDtBetween(String spendoTitle,String delAt,LocalDate startDate, LocalDate endDate);
-	public List<SpendoResponseListDTO> findBySpendoTitleContainingAndDelAtAndSpendoTypeContainingAndCretDtBetween(String spendoTitle,String delAt,String spendoType,LocalDate startDate, LocalDate endDate);
-	public List<SpendoResponseListDTO> findBySpendoTitleContainingAndDelAtAndSpendoCodeTypeContainingAndCretDtBetween(String spendoTitle,String delAt,String spendoCodeType,LocalDate startDate, LocalDate endDate);
-	public List<SpendoResponseListDTO> findBySpendoTitleContainingAndDelAtAndSpendoTypeContainingAndSpendoCodeTypeContainingAndCretDtBetween(String spendoTitle,String delAt,String spendoType,String spendoCodeType,LocalDate startDate, LocalDate endDate);
+	public List<Spendo> findBySpendoDateAndDelAt(LocalDate spendoDate,String delAt);
+	public List<Spendo> findBySpendoDateBetweenAndDelAt(LocalDate startDate, LocalDate endDate,String delAt);
+	public List<Spendo> findByDelAt(String delAt);
+	public List<Spendo> findBySpendoDateBetweenAndSpendoTitleContainingAndDelAt(LocalDate startDate, LocalDate endDate,String spendoTitle,String delAt);
+	public List<Spendo> findBySpendoDateBetweenAndSpendoTitleContainingAndSpendoTypeAndSpendoCodeTypeAndDelAt(LocalDate startDate, LocalDate endDate,String spendoTitle,String spendoType,String spendoCodeType,String delAt);
+	public List<Spendo> findBySpendoDateBetweenAndSpendoTitleContainingAndSpendoTypeAndDelAt(LocalDate startDate, LocalDate endDate,String spendoTitle,String spendoType,String delAt);
+	public List<Spendo> findBySpendoDateBetweenAndSpendoTitleContainingAndSpendoCodeTypeAndDelAt(LocalDate startDate, LocalDate endDate,String spendoTitle,String SpendoCodeType,String delAt);
+	public List<Spendo> findBySpendoDateBetweenAndSpendoTypeAndDelAt(LocalDate startDate, LocalDate endDate,String spendoType,String delAt);
+	public List<Spendo> findBySpendoDateBetweenAndSpendoCodeTypeAndDelAt(LocalDate startDate, LocalDate endDate,String spendoCodeType,String delAt);
 	public Spendo getBySpendoNoAndDelAt(Long spendoNo,String delAt);
 	
 }

@@ -42,7 +42,7 @@ public class CommonService {
 		if(list.isEmpty()) {
 			ResponseEntity.of(ResponseStatus.FAIL,"실패");
 		}
-		
+
 		return ResponseEntity.of(ResponseStatus.SUCCESS,"성공",list);
 	}
 	

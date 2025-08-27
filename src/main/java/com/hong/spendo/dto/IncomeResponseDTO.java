@@ -1,16 +1,16 @@
 package com.hong.spendo.dto;
 
 import lombok.AllArgsConstructor;
-
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ExpenditureResponseDTO {
-    //가격
-    private int expenditurePrice;
+public class IncomeResponseDTO {
+
+	//가격
+    private int incomePrice;
     
     // 날짜 시작
     private String startDt;
@@ -21,8 +21,9 @@ public class ExpenditureResponseDTO {
     //제목
     private String spendoTitle;
     
-    public ExpenditureResponseDTO(String spendoTitle, int expenditurePrice) {
-        this.spendoTitle = spendoTitle;
-        this.expenditurePrice = expenditurePrice;
+    public IncomeResponseDTO (String spendoTitle,int incomePrice) {
+    	this.spendoTitle = spendoTitle;
+    	this.incomePrice = incomePrice;
     }
+    
 }

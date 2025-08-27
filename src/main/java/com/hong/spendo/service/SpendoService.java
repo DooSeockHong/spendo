@@ -1,9 +1,8 @@
 package com.hong.spendo.service;
 
 import java.time.LocalDate;
-
-
-
+import java.text.DecimalFormat;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,13 +38,16 @@ public class SpendoService {
 	*/
 	public ResponseEntity spendoAdd(SpendoDTO spendoDTO) throws Exception {
 		
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		Spendo spendo = new Spendo();
 		spendo.setUserNo(1l);
+		spendo.setSpendoDate(LocalDate.parse(spendoDTO.getSpendoDate(),formatter));
 		spendo.setSpendoTitle(spendoDTO.getSpendoTitle());
 		spendo.setSpendoContent(spendoDTO.getSpendoContent());
 		spendo.setSpendoPrice(spendoDTO.getSpendoPrice());
 		spendo.setSpendoType(spendoDTO.getSpendoType());
 		spendo.setSpendoCodeType(spendoDTO.getSpendoCodeType());
+		
 		Spendo spendoIns = spendoRepository.save(spendo);
 		//등록 데이터 없을시 실패 
 		if(spendoIns == null) {
@@ -60,43 +62,59 @@ public class SpendoService {
 	*/
 	public ResponseEntity spendoList(SpendoListDTO spendoListDTO ) throws Exception {
 		List<SpendoResponseListDTO> spendoList = new ArrayList<>();
-		
-		LocalDate startDate = null;
-		LocalDate endDate = null;
+		List<Spendo> spendoArray = new ArrayList<>();
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-		if (spendoListDTO.getCretDt() != null && spendoListDTO.getEndDt() != null) {
-			//문자를 날짜로변환
-			startDate = LocalDate.parse(spendoListDTO.getCretDt(),formatter);
-			endDate = LocalDate.parse(spendoListDTO.getEndDt(),formatter);
+
+		//가계부 해당날짜 정보 다가져오기
+		if(spendoListDTO.getSpendoDate() != null) {
+			spendoArray = spendoRepository.findBySpendoDateAndDelAt(LocalDate.parse(spendoListDTO.getSpendoDate(),formatter),"N");
 		}
 		
-		//모든 필드가 "" 이거나 null이면 true
-		boolean isAllFieldsEmpty = Stream.of(spendoListDTO.getSpendoTitle(), spendoListDTO.getCretDt(), spendoListDTO.getEndDt())
-                .allMatch(s -> s == null || s.isBlank());
-		// 조건이없는경우 다보여주기
-		if(isAllFieldsEmpty) {
-			spendoList = spendoRepository.findByDelAt("N");
-		} else if(spendoListDTO.getSpendoTitle() != null && spendoListDTO.getCretDt() == null && spendoListDTO.getEndDt() == null && spendoListDTO.getSpendoType() == null && spendoListDTO.getSpendoCodeType() == null) {
-			//제목만있는조건
-			spendoList = spendoRepository.findBySpendoTitleContainingAndDelAt(spendoListDTO.getSpendoTitle(),"N");
-		} else if (spendoListDTO.getSpendoTitle() == null && spendoListDTO.getCretDt() != null && spendoListDTO.getEndDt() != null && spendoListDTO.getSpendoType() == null && spendoListDTO.getSpendoCodeType() == null) {
-			//날짜 검색
-			spendoList = spendoRepository.findByCretDtBetweenAndDelAt(startDate,endDate,"N");
-		} else if (spendoListDTO.getSpendoTitle() != null && spendoListDTO.getCretDt() != null && spendoListDTO.getEndDt() != null && spendoListDTO.getSpendoType() == null && spendoListDTO.getSpendoCodeType() == null) {
-			//제목,날짜 조건
-			spendoList = spendoRepository.findBySpendoTitleContainingAndDelAtAndCretDtBetween(spendoListDTO.getSpendoTitle(),"N",startDate,endDate);
-		} else if (spendoListDTO.getSpendoTitle() != null && spendoListDTO.getCretDt() != null && spendoListDTO.getEndDt() != null && spendoListDTO.getSpendoType() != null && spendoListDTO.getSpendoCodeType() == null) {
-			//제목,날짜,지출타입 조건
-			spendoList = spendoRepository.findBySpendoTitleContainingAndDelAtAndSpendoTypeContainingAndCretDtBetween(spendoListDTO.getSpendoTitle(),"N",spendoListDTO.getSpendoType(), startDate, endDate);
-		} else if (spendoListDTO.getSpendoTitle() != null && spendoListDTO.getCretDt() != null && spendoListDTO.getEndDt() != null && spendoListDTO.getSpendoType() == null && spendoListDTO.getSpendoCodeType() != null) {
-			//제목,날짜,카드구분 조건
-			spendoList = spendoRepository.findBySpendoTitleContainingAndDelAtAndSpendoCodeTypeContainingAndCretDtBetween(spendoListDTO.getSpendoTitle(),"N", spendoListDTO.getSpendoCodeType(), startDate, endDate);
-		} else if(spendoListDTO.getSpendoTitle() != null && spendoListDTO.getCretDt() != null && spendoListDTO.getEndDt() != null && spendoListDTO.getSpendoType() != null && spendoListDTO.getSpendoCodeType() != null) {
-			//제목,날짜,지출타입,카드구분 
-			spendoList = spendoRepository.findBySpendoTitleContainingAndDelAtAndSpendoTypeContainingAndSpendoCodeTypeContainingAndCretDtBetween(spendoListDTO.getSpendoTitle(),"N",spendoListDTO.getSpendoType(),spendoListDTO.getSpendoCodeType(), startDate, endDate);
+		
+		//날짜만 있는 조건값
+		if(spendoListDTO.getStartDt() != null && spendoListDTO.getEndDt() != null && spendoListDTO.getSpendoDate() == null && spendoListDTO.getSpendoTitle().equals("") && spendoListDTO.getSpendoType().equals("") && spendoListDTO.getSpendoCodeType().equals("")) {	
+			 spendoArray = spendoRepository.findBySpendoDateBetweenAndDelAt(LocalDate.parse(spendoListDTO.getStartDt(),formatter),LocalDate.parse(spendoListDTO.getEndDt(),formatter),"N");
+		} else if(spendoListDTO.getStartDt() != null && spendoListDTO.getEndDt() != null && spendoListDTO.getSpendoDate() == null && !(spendoListDTO.getSpendoTitle().equals("")) && !(spendoListDTO.getSpendoType().equals("")) && !(spendoListDTO.getSpendoCodeType().equals(""))) {
+			//날짜 및 조건값 있는 값 
+			spendoArray = spendoRepository.findBySpendoDateBetweenAndSpendoTitleContainingAndSpendoTypeAndSpendoCodeTypeAndDelAt(LocalDate.parse(spendoListDTO.getStartDt(),formatter),LocalDate.parse(spendoListDTO.getEndDt(),formatter),spendoListDTO.getSpendoTitle(),spendoListDTO.getSpendoType(),spendoListDTO.getSpendoCodeType(),"N");	
+		} else if(spendoListDTO.getStartDt() != null && spendoListDTO.getEndDt() != null && spendoListDTO.getSpendoDate() == null && !(spendoListDTO.getSpendoTitle().equals("")) && spendoListDTO.getSpendoType().equals("") && spendoListDTO.getSpendoCodeType().equals("")) {
+			//날짜,제목 조건값 있는 값
+			spendoArray = spendoRepository.findBySpendoDateBetweenAndSpendoTitleContainingAndDelAt(LocalDate.parse(spendoListDTO.getStartDt(),formatter),LocalDate.parse(spendoListDTO.getEndDt(),formatter),spendoListDTO.getSpendoTitle(),"N");
+		} else if(spendoListDTO.getStartDt() != null && spendoListDTO.getEndDt() != null && spendoListDTO.getSpendoDate() == null && !(spendoListDTO.getSpendoTitle().equals("")) && !(spendoListDTO.getSpendoType().equals("")) && spendoListDTO.getSpendoCodeType().equals("")) {
+			//날짜,제목,지출&수입 조건값 있는 값
+			spendoArray = spendoRepository.findBySpendoDateBetweenAndSpendoTitleContainingAndSpendoTypeAndDelAt(LocalDate.parse(spendoListDTO.getStartDt(),formatter),LocalDate.parse(spendoListDTO.getEndDt(),formatter),spendoListDTO.getSpendoTitle(),spendoListDTO.getSpendoType(),"N");
+		} else if(spendoListDTO.getStartDt() != null && spendoListDTO.getEndDt() != null && spendoListDTO.getSpendoDate() == null && !(spendoListDTO.getSpendoTitle().equals("")) && spendoListDTO.getSpendoType().equals("") && !(spendoListDTO.getSpendoCodeType().equals(""))) {
+			//날짜,제목,카드종류 조건값 있는 값
+			spendoArray = spendoRepository.findBySpendoDateBetweenAndSpendoTitleContainingAndSpendoCodeTypeAndDelAt(LocalDate.parse(spendoListDTO.getStartDt(),formatter),LocalDate.parse(spendoListDTO.getEndDt(),formatter),spendoListDTO.getSpendoTitle(),spendoListDTO.getSpendoCodeType(),"N");
+		} else if(spendoListDTO.getStartDt() != null && spendoListDTO.getEndDt() != null && spendoListDTO.getSpendoDate() == null && spendoListDTO.getSpendoTitle().equals("") && !(spendoListDTO.getSpendoType().equals("")) && spendoListDTO.getSpendoCodeType().equals("")) {
+			//날짜,지출&수입 조건값 있는 값
+			spendoArray = spendoRepository.findBySpendoDateBetweenAndSpendoTypeAndDelAt(LocalDate.parse(spendoListDTO.getStartDt(),formatter),LocalDate.parse(spendoListDTO.getEndDt(),formatter),spendoListDTO.getSpendoType(),"N");
+		} else if(spendoListDTO.getStartDt() != null && spendoListDTO.getEndDt() != null && spendoListDTO.getSpendoDate() == null && spendoListDTO.getSpendoTitle().equals("") && spendoListDTO.getSpendoType().equals("") && !(spendoListDTO.getSpendoCodeType().equals(""))) {
+			//날짜,카드 조건값 있는 값
+			spendoArray = spendoRepository.findBySpendoDateBetweenAndSpendoCodeTypeAndDelAt(LocalDate.parse(spendoListDTO.getStartDt(),formatter),LocalDate.parse(spendoListDTO.getEndDt(),formatter),spendoListDTO.getSpendoCodeType(),"N");		
 		}
 		
-		return ResponseEntity.of(ResponseStatus.SUCCESS,"성공",spendoList);
+		
+		
+		
+		for(int i = 0; i < spendoArray.size(); i++) {
+			if(spendoArray.get(i).getSpendoType().equals("EX01")) {
+				spendoArray.get(i).setSpendoType("지출");
+			} else if (spendoArray.get(i).getSpendoType().equals("IN01")) {
+				spendoArray.get(i).setSpendoType("수입");
+			}
+		
+			if(spendoArray.get(i).getSpendoCodeType().equals("CC01")) {
+				spendoArray.get(i).setSpendoCodeType("체크카드");
+			} else if(spendoArray.get(i).getSpendoCodeType().equals("CR01")) {
+				spendoArray.get(i).setSpendoCodeType("신용카드");
+			}
+		}
+		
+		
+
+		
+		return ResponseEntity.of(ResponseStatus.SUCCESS,"성공",spendoArray);
 	}
 	
 	
@@ -108,12 +126,34 @@ public class SpendoService {
 		if(spendoNo == 0 ) {
 			return ResponseEntity.of(ResponseStatus.FAIL,"실패");
 		}
+		System.out.println("아라라아라라아아");
 		ModelMapper modelMapper = new ModelMapper();
 		Spendo spendo = spendoRepository.getBySpendoNoAndDelAt(spendoNo,"N");
 		if(spendo == null) {
 			return ResponseEntity.of(ResponseStatus.FAIL,"실패");
 		}
 		SpendoResponseDetailsDTO spendoResponseDetailsDTO = modelMapper.map(spendo, SpendoResponseDetailsDTO.class);
+		
+		switch (spendoResponseDetailsDTO.getSpendoType()) {
+			case "EX01" : 
+				spendoResponseDetailsDTO.setSpendoType("지출");
+				break;
+			case "IN01" :
+				spendoResponseDetailsDTO.setSpendoType("수입");
+				break;
+		}
+		
+		switch (spendoResponseDetailsDTO.getSpendoCodeType()) {
+			case "CC01" :
+				spendoResponseDetailsDTO.setSpendoCodeType("체크카드");
+				break;
+			case "CR01" :
+				spendoResponseDetailsDTO.setSpendoCodeType("신용카드");
+				break;
+		}
+		
+		
+		
 		return ResponseEntity.of(ResponseStatus.SUCCESS,"성공",spendoResponseDetailsDTO);
 	}
 	
@@ -121,85 +161,42 @@ public class SpendoService {
 	 * 가계부 수정
 	 */
 	public ResponseEntity spendoEdit(SpendoEditDTO spendoEditDTO) throws Exception {
-		Spendo spendoEdit = new Spendo();
+
 		Spendo spendo = spendoRepository.getBySpendoNoAndDelAt(spendoEditDTO.getSpendoNo(),"N");
-		spendoEdit.setSpendoNo(spendo.getSpendoNo());
-		spendoEdit.setUpdDt(LocalDate.now());
-		spendoEdit.setUserNo(spendo.getUserNo());
-		//제목수정
-		if(spendoEditDTO.getSpendoTitle() != null && spendoEditDTO.getSpendoContent() == null && spendoEditDTO.getSpendoPrice() == 0 && spendoEditDTO.getSpendoType() == null && spendoEditDTO.getSpendoCodeType() == null) {
-			spendoEdit.setSpendoTitle(spendoEditDTO.getSpendoTitle());
-			spendoEdit.setSpendoContent(spendo.getSpendoContent());
-			spendoEdit.setSpendoPrice(spendo.getSpendoPrice());
-			spendoEdit.setSpendoType(spendo.getSpendoType());
-			spendoEdit.setSpendoCodeType(spendo.getSpendoCodeType());
-		} else if(spendoEditDTO.getSpendoTitle() == null && spendoEditDTO.getSpendoContent() != null && spendoEditDTO.getSpendoPrice() == 0 && spendoEditDTO.getSpendoType() == null && spendoEditDTO.getSpendoCodeType() == null) {
-			//내용 수정
-			spendoEdit.setSpendoContent(spendoEditDTO.getSpendoContent());
-			spendoEdit.setSpendoTitle(spendo.getSpendoTitle());
-			spendoEdit.setSpendoPrice(spendo.getSpendoPrice());
-			spendoEdit.setSpendoType(spendo.getSpendoType());
-			spendoEdit.setSpendoCodeType(spendo.getSpendoCodeType());
-		} else if (spendoEditDTO.getSpendoTitle() == null && spendoEditDTO.getSpendoContent() == null && spendoEditDTO.getSpendoPrice() > 0 && spendoEditDTO.getSpendoType() == null && spendoEditDTO.getSpendoCodeType() == null) {
-			//가격 수정
-			spendoEdit.setSpendoPrice(spendoEditDTO.getSpendoPrice());
-			spendoEdit.setSpendoTitle(spendo.getSpendoTitle());
-			spendoEdit.setSpendoContent(spendo.getSpendoContent());
-			spendoEdit.setSpendoType(spendo.getSpendoType());
-			spendoEdit.setSpendoCodeType(spendo.getSpendoCodeType());
-		} else if (spendoEditDTO.getSpendoTitle() != null && spendoEditDTO.getSpendoContent() != null && spendoEditDTO.getSpendoPrice() == 0 && spendoEditDTO.getSpendoType() == null && spendoEditDTO.getSpendoCodeType() == null) {
-			//제목,내용 수정
-			spendoEdit.setSpendoTitle(spendoEditDTO.getSpendoTitle());
-			spendoEdit.setSpendoContent(spendoEditDTO.getSpendoContent());
-			spendoEdit.setSpendoPrice(spendo.getSpendoPrice());
-			spendoEdit.setSpendoType(spendo.getSpendoType());
-			spendoEdit.setSpendoCodeType(spendo.getSpendoCodeType());
-		} else if (spendoEditDTO.getSpendoTitle() != null && spendoEditDTO.getSpendoContent() == null && spendoEditDTO.getSpendoPrice() > 0 && spendoEditDTO.getSpendoType() == null && spendoEditDTO.getSpendoCodeType() == null) {
-			//제목,가격 수정 
-			spendoEdit.setSpendoTitle(spendoEditDTO.getSpendoTitle());
-			spendoEdit.setSpendoContent(spendo.getSpendoContent());
-			spendoEdit.setSpendoPrice(spendo.getSpendoPrice());
-			spendoEdit.setSpendoType(spendo.getSpendoType());
-			spendoEdit.setSpendoCodeType(spendo.getSpendoCodeType());
-		} else if (spendoEditDTO.getSpendoTitle() != null && spendoEditDTO.getSpendoContent() == null && spendoEditDTO.getSpendoPrice() > 0 && spendoEditDTO.getSpendoType() == null && spendoEditDTO.getSpendoCodeType() == null) {
-			//내용,가격 수정
-			spendoEdit.setSpendoTitle(spendo.getSpendoTitle());
-			spendoEdit.setSpendoContent(spendoEditDTO.getSpendoContent());
-			spendoEdit.setSpendoPrice(spendo.getSpendoPrice());
-			spendoEdit.setSpendoType(spendo.getSpendoType());
-			spendoEdit.setSpendoCodeType(spendo.getSpendoCodeType());
-		} else if (spendoEditDTO.getSpendoTitle() != null && spendoEditDTO.getSpendoContent() != null && spendoEditDTO.getSpendoPrice() > 0 && spendoEditDTO.getSpendoType() == null && spendoEditDTO.getSpendoCodeType() == null) {
-			//제목,내용,가격 수정
-			spendoEdit.setSpendoTitle(spendoEditDTO.getSpendoTitle());
-			spendoEdit.setSpendoContent(spendoEditDTO.getSpendoContent());
-			spendoEdit.setSpendoPrice(spendoEditDTO.getSpendoPrice());
-			spendoEdit.setSpendoType(spendo.getSpendoType());
-			spendoEdit.setSpendoCodeType(spendo.getSpendoCodeType());
-		} else if (spendoEditDTO.getSpendoTitle() == null && spendoEditDTO.getSpendoContent() == null && spendoEditDTO.getSpendoPrice() == 0 && spendoEditDTO.getSpendoType() != null && spendoEditDTO.getSpendoCodeType() == null) {
-			//지출 타입 수정
-			spendoEdit.setSpendoTitle(spendo.getSpendoTitle());
-			spendoEdit.setSpendoContent(spendo.getSpendoContent());
-			spendoEdit.setSpendoPrice(spendo.getSpendoPrice());
-			spendoEdit.setSpendoType(spendoEditDTO.getSpendoType());
-			spendoEdit.setSpendoCodeType(spendo.getSpendoCodeType());
-		} else if (spendoEditDTO.getSpendoTitle() == null && spendoEditDTO.getSpendoContent() == null && spendoEditDTO.getSpendoPrice() == 0 && spendoEditDTO.getSpendoType() == null && spendoEditDTO.getSpendoCodeType() != null) {
-			//카드 타입 수정
-			spendoEdit.setSpendoTitle(spendo.getSpendoTitle());
-			spendoEdit.setSpendoContent(spendo.getSpendoContent());
-			spendoEdit.setSpendoPrice(spendo.getSpendoPrice());
-			spendoEdit.setSpendoType(spendo.getSpendoType());
-			spendoEdit.setSpendoCodeType(spendoEditDTO.getSpendoCodeType());
-		} else if (spendoEditDTO.getSpendoTitle() != null && spendoEditDTO.getSpendoContent() != null && spendoEditDTO.getSpendoPrice() > 0 && spendoEditDTO.getSpendoType() != null && spendoEditDTO.getSpendoCodeType() != null) {
-			//전체 수정
-			spendoEdit.setSpendoTitle(spendoEditDTO.getSpendoTitle());
-			spendoEdit.setSpendoContent(spendoEditDTO.getSpendoContent());
-			spendoEdit.setSpendoPrice(spendoEditDTO.getSpendoPrice());
-			spendoEdit.setSpendoType(spendoEditDTO.getSpendoType());
-			spendoEdit.setSpendoCodeType(spendoEditDTO.getSpendoCodeType());
+		spendo.setSpendoNo(spendo.getSpendoNo());
+		spendo.setUpdDt(LocalDateTime.now());
+		spendo.setUserNo(spendo.getUserNo());
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+		
+		//날짜
+		if(spendoEditDTO.getSpendoDate() != null) {
+			spendo.setSpendoDate(LocalDate.parse(spendoEditDTO.getSpendoDate(),formatter));
+		}
+		//제목
+		if(!(spendoEditDTO.getSpendoTitle().equals(""))) {
+			spendo.setSpendoTitle(spendoEditDTO.getSpendoTitle());
+		}
+		//내용
+		if(!(spendoEditDTO.getSpendoContent().equals(""))) {
+			spendo.setSpendoContent(spendoEditDTO.getSpendoContent());
+		}
+		//가격
+		if(spendoEditDTO.getSpendoPrice() > 0) {
+			spendo.setSpendoPrice(spendoEditDTO.getSpendoPrice());
+		}
+		
+		//수입&지출 타입
+		if(!(spendoEditDTO.getSpendoType().equals(""))) {
+			spendo.setSpendoType(spendoEditDTO.getSpendoType());
+		}
+		//카드 타입
+		if(!(spendoEditDTO.getSpendoCodeType().equals(""))) {
+			spendo.setSpendoCodeType(spendoEditDTO.getSpendoCodeType());
 		}
 		
 		
-		Spendo spendoEditEntity = spendoRepository.save(spendoEdit);
+		Spendo spendoEditEntity = spendoRepository.save(spendo);
 		ModelMapper modelMapper = new ModelMapper();
 		//엔디티 값을 DTO로 복사
 		SpendoResponseDetailsDTO spendoResponseDetailsDTO = modelMapper.map(spendoEditEntity, SpendoResponseDetailsDTO.class);
@@ -223,7 +220,7 @@ public class SpendoService {
 		}
 		
 		spendo.setDelAt("Y");
-		spendo.setUpdDt(LocalDate.now());
+		spendo.setUpdDt(LocalDateTime.now());
 		spendoRepository.save(spendo);
 		
 		return ResponseEntity.of(ResponseStatus.SUCCESS,"성공");

@@ -27,6 +27,12 @@ public class ExpenditureController {
 		return expenditureService.expenditureGet(commonDTO);
 	}
 	
+	//지출 총 통계가격
+	@GetMapping("/expenditurePriceGet")
+	public ResponseEntity expenditurePriceGet(@RequestParam(value = "spendoDate") String spendoDate ) throws Exception {
+		return expenditureService.expenditurePriceGet(spendoDate);
+	}
+	
 	//월별 통계
 	@GetMapping("/monthExpenditureGet")
 	public ResponseEntity monthExpenditureGet(@RequestParam(value = "startDt") String startDt) throws Exception {

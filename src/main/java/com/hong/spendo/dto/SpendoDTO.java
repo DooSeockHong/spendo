@@ -3,7 +3,13 @@ package com.hong.spendo.dto;
 
 
 import lombok.Data;
+
+import java.time.LocalDate;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
 
 /**
@@ -16,6 +22,11 @@ import jakarta.validation.constraints.Positive;
 @Data
 public class SpendoDTO {
 
+	// 제목
+	@DateTimeFormat(pattern = "yyyy-MM-dd") // Spring에서 날짜 포맷을 처리하도록 지정
+    @Pattern(regexp = "^(19|20)\\d{2}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$", 
+             message = "날짜 형식을 yyyy-MM-dd로 입력해주세요.")
+    private String spendoDate; 
 	// 제목
 	@NotBlank(message = "제목을 입력해주세요.")
     private String spendoTitle; 

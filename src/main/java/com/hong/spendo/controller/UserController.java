@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.hong.spendo.common.ResponseEntity;
+import com.hong.spendo.dto.UserLoginDTO;
 import com.hong.spendo.dto.UserRequestDTO;
 import com.hong.spendo.service.UserService;
 
@@ -26,6 +27,11 @@ public class UserController {
 		
 	}
 	
+	
+	@PostMapping("/userLogin")
+	public ResponseEntity userLogin(@Valid @RequestBody UserLoginDTO userLoginDTO) throws Exception {
+		return userService.userLogin(userLoginDTO);
+	}
 	
 	
 }

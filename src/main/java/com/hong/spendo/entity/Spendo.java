@@ -3,8 +3,7 @@ package com.hong.spendo.entity;
 
 
 import java.time.LocalDate;
-
-
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -38,6 +37,10 @@ public class Spendo {
     @Column(name = "user_no")
     private Long userNo; 
 
+    //가계부 날짜
+    @Column(name = "spendo_date")
+    private LocalDate spendoDate;
+    
     // 제목
     @Column(name = "spendo_title")
     private String spendoTitle; 
@@ -60,15 +63,15 @@ public class Spendo {
 
     // 삭제 여부
     @Column(name = "del_at")
-    private String delAt; 
+    private String delAt = "N"; 
     
     // 등록일
     @Column(name = "cret_dt")
-    private LocalDate cretDt = LocalDate.now(); 
+    private LocalDateTime cretDt = LocalDateTime.now();
 
     // 수정일
     @Column(name = "upd_dt")
-    private LocalDate updDt; 
+    private LocalDateTime updDt; 
 
     
     

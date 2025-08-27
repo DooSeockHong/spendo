@@ -9,4 +9,6 @@ public class CommonDTO {
 	private String startDt;
 	// 날짜 끝
 	private String endDt;
+	// 지출&수입 타입
+	private String spendoType;
 }
