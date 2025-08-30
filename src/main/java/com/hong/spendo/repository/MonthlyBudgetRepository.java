@@ -10,6 +10,7 @@ import com.hong.spendo.entity.MonthlyBudget;
 @Repository
 public interface MonthlyBudgetRepository extends JpaRepository<MonthlyBudget,Long> {
 
-	public MonthlyBudget findByMonthlyBudgetYearAndMonthlyBudgetMonthAndDelAt(String year, String month, String delAt);
+	public MonthlyBudget findByMonthlyBudgetYearAndMonthlyBudgetMonthAndSpendoTypeAndDelAt(String year, String month,String spendoType, String delAt);
+	
 	
 }

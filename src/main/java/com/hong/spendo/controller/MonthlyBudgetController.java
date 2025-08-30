@@ -28,8 +28,13 @@ public class MonthlyBudgetController {
 	
 	//지출&수입 목표 정보
 	@GetMapping("/monthlyBudgeGet")
-	public ResponseEntity monthlyBudgetList(@RequestParam(value = "year") String year, @RequestParam(value = "month")String month) {
-		return monthlyBudgetService.monthlyBudgetGet(year,month);
+	public ResponseEntity monthlyBudgetList(@RequestParam(value = "year") String year, @RequestParam(value = "month")String month, @RequestParam(value = "spendoType")String spendoType) {
+		return monthlyBudgetService.monthlyBudgetGet(year,month,spendoType);
 	}
 	
+	//지출&수입 목표값과 총값
+	@GetMapping("/monthlyTotalPriceGet")
+	public ResponseEntity monthlyTotalPriceGet(@RequestParam(value = "year") String year, @RequestParam(value = "month")String month) {
+		return monthlyBudgetService.monthlyTotalPriceGet(year, month);
+	}
 }

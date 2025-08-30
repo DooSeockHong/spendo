@@ -83,6 +83,17 @@ public class SpendoQueryRepository {
 			.groupBy(spendo.spendoTitle)
 		    .fetch();
 	}
+	//지출&수입 총가격
+	public int findByTotalPrice(String spendoDate, String spendoType) {
+		return queryFactory
+			.select(spendo.spendoPrice.sum().coalesce(0))
+			.from(spendo)
+			.where(spendo.spendoDate.stringValue().like("%" + spendoDate + "%")
+					.and(spendo.delAt.eq("N"))
+					.and(spendo.spendoType.eq(spendoType)))
+			.fetchOne();
+		
+	}
 	
 	
 	
