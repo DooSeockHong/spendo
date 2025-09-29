@@ -28,7 +28,7 @@ public class MonthlyBudgetService {
 		MonthlyBudget monthlyBudgetValue = monthlyBudgetRepository.findByMonthlyBudgetYearAndMonthlyBudgetMonthAndSpendoTypeAndDelAt(monthlyBudgetDTO.getYear(), monthlyBudgetDTO.getMonth(),monthlyBudgetDTO.getSpendoType(),"N");
 		
 		if(Objects.isNull(monthlyBudgetValue)) {
-			//값이 없을경우 수정
+			//값이 없을경우 등록
 			MonthlyBudget monthlyBudget = new MonthlyBudget();
 			monthlyBudget.setMonthlyBudgetYear(monthlyBudgetDTO.getYear());
 			monthlyBudget.setMonthlyBudgetMonth(monthlyBudgetDTO.getMonth());
